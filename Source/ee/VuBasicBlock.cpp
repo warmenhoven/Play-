@@ -24,12 +24,11 @@ void CVuBasicBlock::CompileRange(CMipsJitter* jitter)
 
 	auto integerBranchDelayInfo = GetIntegerBranchDelayInfo();
 
-	bool hasPendingXgKick = false;
+	uint32 nextXgKickTime = -1;
 	const auto clearPendingXgKick =
 	    [&]() {
-		    assert(hasPendingXgKick);
 		    EmitXgKick(jitter);
-		    hasPendingXgKick = false;
+		    nextXgKickTime = -1;
 	    };
 
 	BlockFmacPipelineInfo prevBlockFmacPipelineInfo;
@@ -144,7 +143,7 @@ void CVuBasicBlock::CompileRange(CMipsJitter* jitter)
 
 		//If there's a pending XGKICK and the current lower instruction is
 		//an XGKICK, make sure we flush the pending one first
-		if(loIsXgKick && hasPendingXgKick)
+		if(loIsXgKick && (nextXgKickTime != -1))
 		{
 			clearPendingXgKick();
 		}
@@ -164,15 +163,15 @@ void CVuBasicBlock::CompileRange(CMipsJitter* jitter)
 			jitter->MD_PullRel(offsetof(CMIPS, m_State.nCOP2[savedReg]));
 		}
 
-		if(hasPendingXgKick)
+		if(relativePipeTime >= nextXgKickTime)
 		{
 			clearPendingXgKick();
 		}
 
 		if(loIsXgKick)
 		{
-			assert(!hasPendingXgKick);
-			hasPendingXgKick = true;
+			assert(nextXgKickTime == -1);
+			nextXgKickTime = relativePipeTime + 3;
 		}
 		//Adjust pipeTime
 		relativePipeTime++;
@@ -202,12 +201,12 @@ void CVuBasicBlock::CompileRange(CMipsJitter* jitter)
 		assert(jitter->IsStackEmpty());
 	}
 
-	if(hasPendingXgKick)
+	if(nextXgKickTime != -1)
 	{
 		clearPendingXgKick();
 	}
 
-	assert(!hasPendingXgKick);
+	assert(nextXgKickTime == -1);
 
 	//Increment pipeTime
 	{
