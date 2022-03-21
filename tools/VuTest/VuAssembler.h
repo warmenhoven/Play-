@@ -169,6 +169,7 @@ public:
 		static uint32 NOP();
 		static uint32 SQ(DEST, VF_REGISTER, uint16, VI_REGISTER);
 		static uint32 WAITQ();
+		static uint32 XGKICK(VI_REGISTER);
 	};
 
 private:
