@@ -303,6 +303,15 @@ uint32 CVuAssembler::Lower::FSAND(VI_REGISTER it, uint16 imm)
 	return result;
 }
 
+uint32 CVuAssembler::Lower::IADD(VI_REGISTER id, VI_REGISTER is, VI_REGISTER it)
+{
+	uint32 result = 0x80000030;
+	result |= (it << 16);
+	result |= (is << 11);
+	result |= (id << 6);
+	return result;
+}
+
 uint32 CVuAssembler::Lower::IADDIU(VI_REGISTER it, VI_REGISTER is, uint16 imm)
 {
 	assert(imm <= 0x7FFF);
@@ -322,6 +331,15 @@ CVuAssembler::BRANCHOP CVuAssembler::Lower::IBEQ(VI_REGISTER it, VI_REGISTER is,
 	result.op = 0x50000000;
 	result.op |= (it << 16);
 	result.op |= (is << 11);
+	return result;
+}
+
+uint32 CVuAssembler::Lower::ISWR(DEST dest, VI_REGISTER it, VI_REGISTER is)
+{
+	uint32 result = 0x800003FF;
+	result |= (dest << 21);
+	result |= (it << 16);
+	result |= (is << 11);
 	return result;
 }
 
