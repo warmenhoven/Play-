@@ -1906,6 +1906,7 @@ void CIopBios::CountTicks(uint32 ticks)
 {
 	CurrentTime() += ticks;
 #ifdef _IOP_EMULATE_MODULES
+	m_cdvdman->CountTicks(ticks);
 	m_mcserv->CountTicks(ticks, m_sifMan.get());
 #endif
 }
@@ -1936,7 +1937,6 @@ void CIopBios::NotifyVBlankEnd()
 	}
 #ifdef _IOP_EMULATE_MODULES
 	m_cdvdfsv->ProcessCommands(m_sifMan.get());
-	m_cdvdman->ProcessCommands();
 	m_fileIo->ProcessCommands(m_sifMan.get());
 #endif
 }
