@@ -472,6 +472,7 @@ void CPS2VM::ResetVM()
 	m_currentSpuBlock = 0;
 
 	RegisterModulesInPadHandler();
+	m_gunListener = nullptr;
 }
 
 void CPS2VM::DestroyVM()
