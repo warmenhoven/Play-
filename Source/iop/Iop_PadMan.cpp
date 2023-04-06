@@ -45,6 +45,8 @@ void CPadMan::Invoke(CMIPS& context, unsigned int functionId)
 
 bool CPadMan::Invoke(uint32 method, uint32* args, uint32 argsSize, uint32* ret, uint32 retSize, uint8* ram)
 {
+	//Taiko no Tatsujin will crash due to some mismatching return from this module HLE
+	return true;
 	assert(method == 1);
 	method = args[0];
 	switch(method)
