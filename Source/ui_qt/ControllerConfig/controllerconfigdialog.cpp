@@ -20,11 +20,12 @@
 #include <iostream>
 #include <cassert>
 
-ControllerConfigDialog::ControllerConfigDialog(CInputBindingManager* inputBindingManager, CInputProviderQtKey* qtKeyInputProvider, QWidget* parent)
+ControllerConfigDialog::ControllerConfigDialog(CInputBindingManager* inputBindingManager, CInputProviderQtKey* qtKeyInputProvider, CInputProviderQtMouse* qtMouseInputProvider, QWidget* parent)
     : QDialog(parent)
     , ui(new Ui::ControllerConfigDialog)
     , m_inputManager(inputBindingManager)
     , m_qtKeyInputProvider(qtKeyInputProvider)
+    , m_qtMouseInputProvider(qtMouseInputProvider)
 {
 	ui->setupUi(this);
 
@@ -166,7 +167,7 @@ int ControllerConfigDialog::OpenBindConfigDialog(uint32 padIndex, uint32 buttonI
 	std::transform(buttonName.begin(), buttonName.end(), buttonName.begin(), ::toupper);
 
 	InputEventSelectionDialog IESD(this);
-	IESD.Setup(buttonName.c_str(), m_inputManager, m_qtKeyInputProvider, padIndex, button);
+	IESD.Setup(buttonName.c_str(), m_inputManager, m_qtKeyInputProvider, m_qtMouseInputProvider, padIndex, button);
 	auto res = IESD.exec();
 	return res;
 }

@@ -4,7 +4,6 @@
 #include <QAbstractButton>
 
 #include "../input/InputBindingManager.h"
-#include "InputProviderQtKey.h"
 
 namespace Ui
 {
@@ -12,13 +11,15 @@ namespace Ui
 }
 
 class QTableView;
+class CInputProviderQtKey;
+class CInputProviderQtMouse;
 
 class ControllerConfigDialog : public QDialog
 {
 	Q_OBJECT
 
 public:
-	explicit ControllerConfigDialog(CInputBindingManager*, CInputProviderQtKey*, QWidget* parent = 0);
+	explicit ControllerConfigDialog(CInputBindingManager*, CInputProviderQtKey*, CInputProviderQtMouse*, QWidget* parent = 0);
 	~ControllerConfigDialog();
 
 	static void AutoConfigureKeyboard(uint32 padIndex, CInputBindingManager*);
@@ -41,5 +42,6 @@ private:
 	Ui::ControllerConfigDialog* ui;
 	CInputBindingManager* m_inputManager = nullptr;
 	CInputProviderQtKey* m_qtKeyInputProvider = nullptr;
+	CInputProviderQtMouse* m_qtMouseInputProvider = nullptr;
 	std::vector<QTableView*> m_bindingsViews;
 };
